@@ -1,11 +1,12 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, CheckCircle2, Code2, LayoutDashboard, Link, Rocket, Sparkles, Star,Play, Crown, Trophy } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Code2, LayoutDashboard, Rocket, Sparkles, Star,Play, Crown, Trophy } from "lucide-react";
 // import { CourseCard } from "@/components/courses";
 import Image from "next/image";
 // import {sanityFetch} from "@/sanity/lib/live";
 // import {FEATURED_COURSES_QUERY,STATE_QUERY} from "@/sanity/lib/queries";
 import {currentUser} from "@clerk/nextjs/server";
+import Link from "next/link";
 
 export default async function Home() {
   const user=await currentUser();
@@ -21,7 +22,7 @@ export default async function Home() {
       <div className="absolute top-[40%] right-[20%] w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[80px] animate-pulse"
       style={{animationDelay:"2s"}}
       />
-
+  </div>
       {/* Noise texture overlay */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.015]"
@@ -124,7 +125,7 @@ export default async function Home() {
             </div>
 
             {/* Stats */}
-            {/* <div
+             {/* <div
               className="mt-16 grid grid-cols-3 gap-8 md:gap-16 animate-fade-in"
               style={{ animationDelay: "0.5s" }}
             >
@@ -206,10 +207,12 @@ export default async function Home() {
                 ],
               },
             ].map((plan) => (
+              
               <div
                 key={plan.tier}
                 className={`relative p-8 rounded-2xl ${plan.bgGlow} border ${plan.borderColor} ${plan.popular ? "ring-2 ring-violet-500/50" : ""} transition-all duration-300 hover:scale-[1.02]`}
               >
+                {console.log(plan)}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-xs font-semibold">
                     Most Popular
@@ -407,6 +410,5 @@ export default async function Home() {
         </footer>
       </main>
       </div>
-    </div>
   );
 }
