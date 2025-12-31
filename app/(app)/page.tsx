@@ -1,16 +1,22 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, CheckCircle2, Code2, LayoutDashboard, Rocket, Sparkles, Star,Play, Crown, Trophy } from "lucide-react";
-// import { CourseCard } from "@/components/courses";
+import { ArrowRight, BookOpen, CheckCircle2, Code2, LayoutDashboard, Rocket, Sparkles, Star,Play, Crown, Trophy, Users } from "lucide-react";
+import { CourseCard } from "@/components/courses";
 import Image from "next/image";
-// import {sanityFetch} from "@/sanity/lib/live";
-// import {FEATURED_COURSES_QUERY,STATE_QUERY} from "@/sanity/lib/queries";
+ import {sanityFetch} from "@/sanity/lib/live";
+ import {FEATURED_COURSES_QUERY,STATS_QUERY } from "@/sanity/lib/queries";
 import {currentUser} from "@clerk/nextjs/server";
 import Link from "next/link";
 
 export default async function Home() {
-  const user=await currentUser();
-  const isSignedIn=!!user;
+    const [{data:courses},{data:stats},user]=await Promise.all([
+      sanityFetch({query:FEATURED_COURSES_QUERY}),
+      sanityFetch({query:STATS_QUERY}),
+      currentUser()
+    ])
+
+    const isSignedIn=!!user
+
   return (
     <div className="min-h-screen bg-[#09090b] text-white overflow-hidden">
       {
@@ -125,7 +131,7 @@ export default async function Home() {
             </div>
 
             {/* Stats */}
-             {/* <div
+             <div
               className="mt-16 grid grid-cols-3 gap-8 md:gap-16 animate-fade-in"
               style={{ animationDelay: "0.5s" }}
             >
@@ -152,7 +158,7 @@ export default async function Home() {
                   <span className="text-sm text-zinc-500">{stat.label}</span>
                 </div>
               ))}
-            </div> */}
+            </div>
           </div>
         </section>
 
@@ -259,9 +265,14 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* {courses.map((course) => (
-              <CourseCard
-                key={course.slug!.current!}
+            {courses.map((course) => {
+              const slug=course.slug?.current;
+              if(!slug){
+                return null;
+              }
+              
+              return (<CourseCard
+                key={course._id}
                 slug={{ current: course.slug!.current! }}
                 title={course.title}
                 description={course.description}
@@ -270,7 +281,7 @@ export default async function Home() {
                 moduleCount={course.moduleCount}
                 lessonCount={course.lessonCount}
               />
-            ))} */}
+            )})}
           </div>
 
           <div className="text-center mt-10">
